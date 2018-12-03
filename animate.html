@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html, body, div, ul, li, img, span {
+      padding: 0;
+      margin: 0;
+    }
+
+    ul, li {
+      list-style: none
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    img {
+      vertical-align: top;
+    }
+
+    #box {
+      padding: 20px;
+      max-width: 700px;
+      position: relative;
+    }
+
+     #box ul {
+       position: relative;
+     }
+
+    #box li {
+      height: 30px;
+      box-sizing: border-box;
+      position: absolute;
+      line-height: 30px;
+      transition: width ease 2s, top ease 1s;
+      background: #ddd;
+      border-radius: 20px;
+      box-shadow: 1px 1px 5px #999;
+    }
+
+    #box li .name {
+      position: absolute;
+      right: 20px;
+      white-space: nowrap;
+    }
+
+    #box li .count {
+      margin-left: 15px;
+      position: absolute;
+      left: 100%;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: #fff;
+      font-style: italic;
+      text-shadow: 1px 0 2px #000, 0 1px 2px #000;
+    }
+
+    #box li.add {
+      box-shadow: 0 0 10px #f00;
+      border: 2px solid #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="box">
+    <ul id="bars"></ul>
+  </div>
+  <script>
+    class AnimateBars {
+      constructor() {
+        this.baseData;
+        this.htmlDomArr = [];
+        this.intervalId;
+      }
+
+      _init() {
+        this.initData();
+        this.createBars();
+
+        let time = 0;
+        this.intervalId = setInterval(() => {
+          time += 1;
+          this.addNewData();
+
+          if(this.baseData.length === 15) {
+            time = 0;
+            clearInterval(this.intervalId)
+          }
+        }, 6000)
+      }
+      
+      // 初始化数据
+      initData() {
+        let data = [];
+
+        for(let i = 0; i < 10; i++) {
+          let _obj = {
+            id: `id${i+1}`,
+            name: `第${i+1}位`,
+            count: parseInt(Math.random()*800)
+          };
+          data.push(_obj)
+        }
+        this.baseData = data;
+      }
+
+      createBgColor() {
+        return `rgb(${parseInt(Math.random()*255)}, ${parseInt(Math.random()*255)}, ${parseInt(Math.random()*255)})`
+      }
+
+      createBars() {
+        let box = document.getElementById('bars');
+
+        this.baseData.sort((l, n) => n.count - l.count);
+        this.baseData.forEach((_l, i) => {
+          let li = this.createLiDom(_l, i);
+          box.appendChild(li);
+
+          let item = {
+            id: _l.id,
+            liEl: li,
+          }
+
+          this.htmlDomArr.push(item);
+        })
+
+        setInterval(() => {
+          this.beginAnimate(this.htmlDomArr)
+        }, 3000)
+      }
+
+      createLiDom(data, index) {
+        let li = document.createElement('li');
+        let name = document.createElement('span');
+        let count = document.createElement('span');
+
+        li.style.width = `${data.count}px`;
+        li.style.background = this.createBgColor();
+        li.style.top = `${index*40}px`;
+
+        name.className = 'name';
+        name.innerText = data.name;
+
+        count.className = 'count';
+        count.innerText = data.count;
+
+        li.appendChild(name);
+        li.appendChild(count);
+
+        return li;
+      }
+      
+      beginAnimate(htmlDom) {
+        this.baseData = this.reorderData(this.baseData); // reorder
+        
+        this.baseData.forEach((item, index) => {
+          htmlDom.forEach((el, key) => {
+            if(el.id === item.id) {
+              el.liEl.style.width = `${item.count}px`;
+              el.liEl.style.top = `${index*40}px`;
+              el.liEl.lastElementChild.innerText = item.count;
+            }
+          })
+        })
+      }
+
+      // 重新排序
+      reorderData(data) {
+        data.forEach(_d => {
+          _d.count = parseInt(Math.random()*800)
+        })
+
+        return data.sort((l, n) => n.count -l.count)
+      }
+
+      addNewData() {
+        let box = document.getElementById('bars');
+        let len = this.baseData.length;
+        let newD = {
+          id: `id${len+1}`,
+          name: `第${len+1}位`,
+          count: parseInt(Math.random()*800)
+        }
+
+        this.baseData.push(newD);
+        let data = this.createLiDom(newD, len+1);
+        data.classList.add('add');
+        setTimeout(() => {
+          data.classList.remove('add')
+        }, 3000)
+        box.appendChild(data);
+        
+        this.htmlDomArr.push({
+          id: `id${len+1}`,
+          liEl: data
+        });
+        this.beginAnimate(this.htmlDomArr);
+      }
+    }
+
+    let myAnimate = new AnimateBars();
+    myAnimate._init();
+  </script>
+</body>
+</html>
