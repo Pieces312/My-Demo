@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>菜单</title>
+  <link rel="stylesheet" href="base.css">
+</head>
+<body>
+  <div id="menus">
+    <meun-list></meun-list>
+    <cart></cart>
+  </div>
+</body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<script src="menuList.js"></script>
+<script>
+  const Bus = new Vue(); // 组件通讯中间层
+
+  const meunList = {
+    data() {
+      let myList = new MenusList();
+      myList._init();
+
+      return {
+        lists: myList.lists,
+        selected: []
+      }
+    },
+    template: `
+        <div class='menusList'>
+          <div class='titleName'>
+            <h3>菜单</h3> 
+            <button class='remove' @click='removeSelect'>清空菜单</button>
+            <button class='random-gene' @click='randomClickDish'>随机生成</button>
+          </div>
+          <div class='list-box' v-for='menu in lists'>
+              <p class='title'>{{menu.name}}</p>
+              <ul class='type'>
+                <li v-for='(child, key) in menu.childrens'>
+                  <input :id='child.type+key' type='checkbox' :checked='child._selected' @change='choiceDish(child)' />
+                  <label :for='child.type+key' > {{child.name}} <span>￥{{child.price}}</span></label>
+                </li>
+              </ul>
+          </div>
+        </div>
+      `,
+    mounted() {
+      let self = this;
+      Bus.$on('deleteData', function(data) {
+        self.lists.forEach(_l => {
+          _l.childrens.map(child => {
+            if(child.name === data.name) {
+              child._selected = false;
+            }
+          })
+        })
+      })
+    },
+    methods: {
+      choiceDish(item) {
+        item._selected = !item._selected;
+        
+        if(item._selected) {
+          this.selected.push(item);
+        } else {
+          let sel = this.selected.forEach((_l, i) => {
+            if(_l.name === item.name) {
+              this.selected.splice(i, 1);
+            }
+          })
+        }
+        
+        Bus.$emit('selectedList', this.selected)
+      },
+
+      // 随机生成菜品
+      randomClickDish() {
+        this.removeSelect();
+
+        let meat = this.lists[0];
+        let vegetable = this.lists[1];
+        let soup = this.lists[3];
+        this.selected = [];
+        
+        this.generateDish(meat, 3);
+        this.generateDish(vegetable, 2);
+        this.generateDish(soup, 1);
+
+      },
+      generateDish(data, max) {
+        let res = [];
+        let len = data.childrens.length;
+        let num = 0;
+        
+        while(num < max || res.length !== max) {
+          let _idx = Math.floor(Math.random()*len);
+
+          if(data.childrens[_idx].price < 26) {
+            res.push(_idx);
+          } 
+          res = Array.from(new Set(res));
+
+          num += 1;
+        }
+
+        for(let i = 0; i < res.length; i++) {
+          this.choiceDish(data.childrens[res[i]])
+        }
+      },
+
+      // 清空菜品
+      removeSelect() {
+        this.turnToFalse();
+        this.selected = [];
+        Bus.$emit('selectedList', this.selected)
+      },
+
+      turnToFalse() {
+        this.lists.forEach(_l => {
+            if(Array.isArray(_l.childrens)) {
+                _l.childrens.map(child => {
+                    if(child._selected) {
+                        child._selected = false;
+                    }
+                })
+            }
+        })
+      }
+    }
+  }
+
+  // cart component
+  const Cart = {
+    data() {
+      return {
+        cartList: [],
+      }
+    },
+    template: `
+      <div class='cart'>
+        <h3>已点菜品</h3>
+        <div class='cart-box'>
+          <ul class='cart-list' v-if='cartList.length'>
+            <li v-for='item in cartList'>
+              <span class='name'>{{item.name}}</span>
+              <span class='price'>￥{{item.price}}</span>
+              <button class='delete' @click='deleteDish(item)'>删除</button>
+            </li>
+          </ul>
+          <p v-else>暂无菜品</p>
+        </div>
+        <div class='total'>总价：{{total}}</div>
+      </div>
+    `,
+    mounted() {
+      this.selected();
+    },
+    methods: {
+      selected() {
+        let self = this;
+        Bus.$on('selectedList', function(data) {
+          self.cartList = data;
+        })
+      },
+      deleteDish(data) {
+        this.cartList.forEach((dish, index) => {
+          if(dish.name === data.name) {
+            this.cartList.splice(index, 1);
+          }
+        })
+
+        Bus.$emit('deleteData', data);
+      }
+    },
+    computed: {
+      total() {
+        return this.cartList.reduce((total, cur) => {
+          return total + Number(cur.price);
+        }, 16)
+      }
+    }
+  }
+
+  let vue = new Vue({
+    name: 'menus',
+    components: {meunList, Cart},
+    data() {
+      return {
+        message: '菜单',
+      }
+    }
+  })
+
+  vue.$mount('#menus')
+</script>
+</html>

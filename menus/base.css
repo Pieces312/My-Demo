@@ -1,0 +1,182 @@
+html, body, div, ul, li, p, h3, span, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul, li {
+    list-style: none;
+}
+
+span {
+    display: inline-block;
+}
+
+button {
+    outline: none;
+    border: none;
+}
+
+.menusList {
+    padding: 20px 15px;
+    width: 70%;
+    float: left;
+    border-right: 2px solid #000;
+}
+
+.menusList .titleName {
+    padding-left: 20px;
+    text-align: right;
+}
+
+.menusList .titleName h3 {
+    position: fixed;
+    top: 30px;
+    left: 40px;
+    font-size: 35px;
+    writing-mode: vertical-lr;
+    letter-spacing: 15px;
+}
+
+.menusList .random-gene,
+.menusList .remove {
+    margin-right: 10px;
+    min-width: 80px;
+    height: 35px;
+    cursor: pointer;
+    /* float: right; */
+    color: #fff;
+    background: #409eff;
+    border-radius: 5px;
+}
+
+.menusList .remove {
+    background: #fc6868;
+}
+
+.menusList .remove:active {
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px #fc6868;
+}
+
+.menusList .random-gene:active {
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px #409eff;
+}
+
+.menusList .list-box {
+    margin: 15px auto 0;
+    width: 80%;
+}
+
+.menusList .list-box .title {
+    padding-left: 12px;
+    margin: 20px 0 10px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 10;
+    font: bold 16px/35px "";
+    transition: top ease 2s;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.menusList .list-box .title::before {
+    width: 5px;
+    height: 10px;
+    display: block;
+    position: absolute;
+    top: 13px;
+    left: 0;
+    content: "";
+    background: #409eff;
+}
+
+.menusList ul.type {
+    width: 100%;
+    overflow: hidden;
+}
+
+.menusList .type li {
+    padding: 0 0 20px 30px;
+    width: calc(25% - 10px);
+    float: left;
+    font: 15px/30px '微软雅黑';
+}
+
+.menusList .type input,
+.menusList .type label {
+    position: relative;
+    cursor: pointer;
+}
+
+.menusList .type input::before {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: absolute;
+    top: -2px;
+    left: -3px;
+    content: "";
+    border: 1px solid #999;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.menusList .type input:checked::before {
+    border-color: #409eff;
+    background: #409eff;
+    box-shadow: inset 0px 0px 0px 4px #fff;
+}
+
+
+/* 已点菜单 content */
+.cart {
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30%;
+}
+
+.cart .cart-box {
+    height: 300px;
+    overflow: auto
+}
+
+.cart .cart-box p {
+    line-height: 50px;
+    color: #666;
+}
+
+.cart .cart-box li {
+    line-height: 45px;
+    border-bottom: 1px solid #333;
+}
+
+.cart .cart-box .name {
+    min-width: 100px;
+}
+
+.cart .cart-box .price {
+    min-width: 150px;
+    text-align: right;
+}
+
+.cart .cart-box .delete {
+    margin-right: 5px;
+    float: right;
+    cursor: pointer;
+    color: #fc6868;
+    line-height: 45px;
+    background: #fff;
+}
+
+.cart .cart-box .delete:active {
+    color: #f00;
+}
+
+.cart .total {
+    color: red;
+}
