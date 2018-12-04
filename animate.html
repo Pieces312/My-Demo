@@ -29,10 +29,12 @@
     }
 
      #box ul {
+       padding-left: 20px;
        position: relative;
      }
 
     #box li {
+      margin-left: 60px;
       height: 28px;
       box-sizing: border-box;
       position: absolute;
@@ -46,7 +48,7 @@
 
     #box li .name {
       position: absolute;
-      right: 10px;
+      left: -60px;
       white-space: nowrap;
     }
 
@@ -89,12 +91,10 @@
         let data = [];
 
         for(let i = 0; i < 10; i++) {
-          let _name = `第${i+1}位`;
-          let num = parseInt(Math.random()*800);
           let _obj = {
             id: `id${i+1}`,
-            name: _name,
-            count: (num < (_name.length*20)) ? (_name.length*20) : num // 判断算计生成的count不能小于name的长度，避免极端情况
+            name: `第${i+1}位`,
+            count: parseInt(Math.random()*800) 
           };
           data.push(_obj)
         }
@@ -180,8 +180,7 @@
       // 重新排序
       _reoederBasedata() {
         this._baseData.forEach(_d => {
-          let num = parseInt(Math.random()*800);
-          _d.count = (num < (_d.name.length*20)) ? (_d.name.length*20) : num
+          _d.count = parseInt(Math.random()*800);
         })
 
         return this._baseData.sort((l, n) => n.count - l.count);
@@ -195,7 +194,8 @@
           num += 1;
           this._addNewData()
 
-          if(num > 3) { // 新增到3个之后就清除定时器
+          if(num > 3) { // 新增到4个之后就清除定时器
+            num = 0;
             clearInterval(timer);
           }
         }, 6000);
@@ -204,13 +204,10 @@
       // 添加新数据
       _addNewData() {
         let len = this._baseData.length;
-        let _name = `第${len+1}位`;
-        let _count = parseInt(Math.random() * 800);
-
         let _new = {
           id: `id${len+1}`,
-          name: _name,
-          count: _count < (_name.length*20) ? (_name.length*20) : _count
+          name: `第${len+1}位`,
+          count:  parseInt(Math.random() * 800)
         }
         let li = this._createLiDom(_new, len+1);
 
