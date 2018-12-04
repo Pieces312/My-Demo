@@ -25,22 +25,20 @@
 
     #box {
       padding: 20px;
-      height: 700px;
+      max-width: 700px;
+      position: relative;
     }
 
      #box ul {
-       padding-left: 20px;
        position: relative;
      }
 
     #box li {
-      margin-left: 60px;
       height: 28px;
       box-sizing: border-box;
       position: absolute;
       line-height: 28px;
-      transition: width ease 1s, transform ease 1s, opacity ease 1s;
-      opacity: 0;
+      transition: width ease 1s, transform ease 1s;
       background: #ddd;
       border-radius: 20px;
       box-shadow: inset -5px 0px 25px rgba(0,0,0,.4);
@@ -48,7 +46,7 @@
 
     #box li .name {
       position: absolute;
-      left: -60px;
+      right: 10px;
       white-space: nowrap;
     }
 
@@ -66,10 +64,41 @@
 </head>
 <body>
   <div id="box">
-    <h3>销量排行</h3>
     <ul id="list"></ul>
   </div>
-  <script>  
+  <script>
+    // 通讯中间层
+    class Bus {
+      constructor() {
+        this.subscribers = {}
+      }
+
+      emit(name, _data) {
+        if(typeof name === 'undefined') throw Error("Event name is not defined")
+
+        this.subscribers[name] = _data
+      }
+      
+      // 监听事件
+      on(name, cb) {
+        let _isExist = false;
+        for(let i in this.subscribers) {
+          if(i === name) {
+            _isExist = true;
+          }
+        }
+        if(!_isExist) throw Error(`${name} is not defined`);
+
+        let subscriber = this.subscribers[name];
+        
+        if(typeof cb !== 'function') {
+          throw Error(`callback must be function or not defined`);
+        } else {
+          cb(subscriber)
+        }
+      }
+    };
+  
     class Animate {
       constructor () {
         this._baseData;
@@ -83,18 +112,21 @@
         // 创建动画
         this._createAnimate();
         
-        // 新增事件
-        this._addNewAnimate();
+        setTimeout(() => {
+          this._addNewData()
+        }, 6000);
       }
       
       _initArr() {
         let data = [];
 
         for(let i = 0; i < 10; i++) {
+          let _name = `第${i+1}名`;
+          let num = parseInt(Math.random()*800);
           let _obj = {
             id: `id${i+1}`,
-            name: `第${i+1}位`,
-            count: parseInt(Math.random()*800) 
+            name: _name,
+            count: (num < (_name.length*20)) ? (_name.length*20) : num // 判断算计生成的count不能小于name的长度，避免极端情况
           };
           data.push(_obj)
         }
@@ -147,18 +179,18 @@
           count.classList.add('count');
           count.innerText = data.count;
 
-          li.style.opacity = 1;
           li.style.width = `${data.count}px`;
           li.style.background = this._createBgColor();
           li.style.transform = `translateY(${index*40}px)`;
 
-          li.append(name, count);
+          li.appendChild(name);
+          li.appendChild(count);
+
           return li;
       }
       
       // 开始动画的函数
       _beginAnimate() {
-        let bar = document.querySelector('#list');
         let newData = this._reoederBasedata(); // 重排数据
         
         newData.forEach((_l, i) => {
@@ -168,11 +200,6 @@
               n.el.style.transform = `translateY(${i*40}px)`;
               n.el.lastElementChild.innerText = _l.count;
             }
-
-            if(n.isNew) {
-              bar.appendChild(n.el)
-              n.isNew = false;
-            }
           })
         })
       }
@@ -180,42 +207,32 @@
       // 重新排序
       _reoederBasedata() {
         this._baseData.forEach(_d => {
-          _d.count = parseInt(Math.random()*800);
+          let num = parseInt(Math.random()*800);
+          _d.count = (num < (_d.name.length*20)) ? (_d.name.length*20) : num
         })
 
         return this._baseData.sort((l, n) => n.count - l.count);
       }
-      
-      // 添加新数据的动画
-      _addNewAnimate() {
-        let num = 0, timer = null;
-
-        timer = setInterval(() => {
-          num += 1;
-          this._addNewData()
-
-          if(num > 3) { // 新增到4个之后就清除定时器
-            num = 0;
-            clearInterval(timer);
-          }
-        }, 6000);
-      }
 
       // 添加新数据
       _addNewData() {
+        let bar = document.querySelector('#list');
         let len = this._baseData.length;
+        let _name = `第${len+1}位`;
+        let _count = parseInt(Math.random() * 800);
+
         let _new = {
           id: `id${len+1}`,
-          name: `第${len+1}位`,
-          count:  parseInt(Math.random() * 800)
+          name: _name,
+          count: _count < (_name.length*20) ? (_name.length*20) : _count
         }
         let li = this._createLiDom(_new, len+1);
 
+        bar.appendChild(li);
         this._baseData.push(_new);
         this.htmlDOMData.push({
           id: `id${len+1}`,
-          el: li,
-          isNew: true
+          el: li
         })
       }
     }
