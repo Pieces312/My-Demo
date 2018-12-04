@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>动画1</title>
   <style>
     html, body, div, ul, li, img, span {
       padding: 0;
@@ -34,19 +34,19 @@
      }
 
     #box li {
-      height: 30px;
+      height: 28px;
       box-sizing: border-box;
       position: absolute;
-      line-height: 30px;
-      transition: width ease 2s, top ease 1s;
+      line-height: 28px;
+      transition: width ease 1s, transform ease 1s;
       background: #ddd;
       border-radius: 20px;
-      box-shadow: 1px 1px 5px #999;
+      box-shadow: inset -5px 0px 25px rgba(0,0,0,.4);
     }
 
     #box li .name {
       position: absolute;
-      right: 20px;
+      right: 10px;
       white-space: nowrap;
     }
 
@@ -60,152 +60,153 @@
       font-style: italic;
       text-shadow: 1px 0 2px #000, 0 1px 2px #000;
     }
-
-    #box li.add {
-      box-shadow: 0 0 10px #f00;
-      border: 2px solid #fff;
-    }
   </style>
 </head>
 <body>
   <div id="box">
-    <ul id="bars"></ul>
+    <ul id="list"></ul>
   </div>
-  <script>
-    class AnimateBars {
-      constructor() {
-        this.baseData;
-        this.htmlDomArr = [];
-        this.intervalId;
-      }
-
-      _init() {
-        this.initData();
-        this.createBars();
-
-        let time = 0;
-        this.intervalId = setInterval(() => {
-          time += 1;
-          this.addNewData();
-
-          if(this.baseData.length === 15) {
-            time = 0;
-            clearInterval(this.intervalId)
-          }
-        }, 6000)
+  <script>  
+    class Animate {
+      constructor () {
+        this._baseData;
+        this.htmlDOMData = [];
       }
       
-      // 初始化数据
-      initData() {
+      init() {
+        // 初始化数据
+        this._initArr();
+        
+        // 创建动画
+        this._createAnimate();
+        
+        setTimeout(() => {
+          this._addNewData()
+        }, 6000);
+      }
+      
+      _initArr() {
         let data = [];
 
         for(let i = 0; i < 10; i++) {
+          let _name = `第${i+1}名`;
+          let num = parseInt(Math.random()*800);
           let _obj = {
             id: `id${i+1}`,
-            name: `第${i+1}位`,
-            count: parseInt(Math.random()*800)
+            name: _name,
+            count: (num < (_name.length*20)) ? (_name.length*20) : num // 判断算计生成的count不能小于name的长度，避免极端情况
           };
           data.push(_obj)
         }
-        this.baseData = data;
+        this._baseData = data;
       }
 
-      createBgColor() {
+      _createAnimate() {
+        // 如果是第一次先创建DOM元素，不是就开始动画
+        for(let i = 0; i < 5; i++) {
+          if(i === 0) {
+            this._firstCreate();
+          } else {
+            setInterval(() => {
+              this._beginAnimate()
+            }, i * 3000)
+          }
+        }
+      }
+
+      _firstCreate() {
+        this._first = false;
+        let bar = document.querySelector('#list');
+
+        this._baseData.sort((l, n) => n.count - l.count);
+        this._baseData.forEach((_data, index) => {
+          let li = this._createLiDom(_data, index);
+          bar.appendChild(li);
+
+          this.htmlDOMData.push({
+            id: _data.id,
+            el: li
+          })
+        })
+      }
+      
+      // 随机生成bar背景颜色
+      _createBgColor() {
         return `rgb(${parseInt(Math.random()*255)}, ${parseInt(Math.random()*255)}, ${parseInt(Math.random()*255)})`
       }
 
-      createBars() {
-        let box = document.getElementById('bars');
+      // 创建单个bar元素
+      _createLiDom(data, index) {
+          let li = document.createElement('li');
+          let name = document.createElement('span');
+          let count = document.createElement('span');
 
-        this.baseData.sort((l, n) => n.count - l.count);
-        this.baseData.forEach((_l, i) => {
-          let li = this.createLiDom(_l, i);
-          box.appendChild(li);
+          name.classList.add('name');
+          name.innerText = data.name;
 
-          let item = {
-            id: _l.id,
-            liEl: li,
-          }
+          count.classList.add('count');
+          count.innerText = data.count;
 
-          this.htmlDomArr.push(item);
-        })
+          li.style.width = `${data.count}px`;
+          li.style.background = this._createBgColor();
+          li.style.transform = `translateY(${index*40}px)`;
 
-        setInterval(() => {
-          this.beginAnimate(this.htmlDomArr)
-        }, 3000)
-      }
+          li.appendChild(name);
+          li.appendChild(count);
 
-      createLiDom(data, index) {
-        let li = document.createElement('li');
-        let name = document.createElement('span');
-        let count = document.createElement('span');
-
-        li.style.width = `${data.count}px`;
-        li.style.background = this.createBgColor();
-        li.style.top = `${index*40}px`;
-
-        name.className = 'name';
-        name.innerText = data.name;
-
-        count.className = 'count';
-        count.innerText = data.count;
-
-        li.appendChild(name);
-        li.appendChild(count);
-
-        return li;
+          return li;
       }
       
-      beginAnimate(htmlDom) {
-        this.baseData = this.reorderData(this.baseData); // reorder
+      // 开始动画的函数
+      _beginAnimate() {
+        let newData = this._reoederBasedata(); // 重排数据
         
-        this.baseData.forEach((item, index) => {
-          htmlDom.forEach((el, key) => {
-            if(el.id === item.id) {
-              el.liEl.style.width = `${item.count}px`;
-              el.liEl.style.top = `${index*40}px`;
-              el.liEl.lastElementChild.innerText = item.count;
+        newData.forEach((_l, i) => {
+          this.htmlDOMData.some((n, k) => {
+            if(_l.id === n.id) {
+              n.el.style.width = `${_l.count}px`;
+              n.el.style.transform = `translateY(${i*40}px)`;
+              n.el.lastElementChild.innerText = _l.count;
             }
           })
         })
       }
-
+      
       // 重新排序
-      reorderData(data) {
-        data.forEach(_d => {
-          _d.count = parseInt(Math.random()*800)
+      _reoederBasedata() {
+        this._baseData.forEach(_d => {
+          let num = parseInt(Math.random()*800);
+          _d.count = (num < (_d.name.length*20)) ? (_d.name.length*20) : num
         })
 
-        return data.sort((l, n) => n.count -l.count)
+        return this._baseData.sort((l, n) => n.count - l.count);
       }
 
-      addNewData() {
-        let box = document.getElementById('bars');
-        let len = this.baseData.length;
-        let newD = {
-          id: `id${len+1}`,
-          name: `第${len+1}位`,
-          count: parseInt(Math.random()*800)
-        }
+      // 添加新数据
+      _addNewData() {
+        let bar = document.querySelector('#list');
+        let len = this._baseData.length;
+        let _name = `第${len+1}位`;
+        let _count = parseInt(Math.random() * 800);
 
-        this.baseData.push(newD);
-        let data = this.createLiDom(newD, len+1);
-        data.classList.add('add');
-        setTimeout(() => {
-          data.classList.remove('add')
-        }, 3000)
-        box.appendChild(data);
-        
-        this.htmlDomArr.push({
+        let _new = {
           id: `id${len+1}`,
-          liEl: data
-        });
-        this.beginAnimate(this.htmlDomArr);
+          name: _name,
+          count: _count < (_name.length*20) ? (_name.length*20) : _count
+        }
+        let li = this._createLiDom(_new, len+1);
+
+        bar.appendChild(li);
+        this._baseData.push(_new);
+        this.htmlDOMData.push({
+          id: `id${len+1}`,
+          el: li
+        })
       }
     }
-
-    let myAnimate = new AnimateBars();
-    myAnimate._init();
-  </script>
+  
+    let myAnimate = new Animate();
+    myAnimate.init()
+    </script>
 </body>
 </html>
