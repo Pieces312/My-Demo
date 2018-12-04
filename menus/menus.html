@@ -33,8 +33,8 @@
         <div class='menusList'>
           <div class='titleName'>
             <h3>菜单</h3> 
-            <button class='remove' @click='removeSelect'>清空菜单</button>
             <button class='random-gene' @click='randomClickDish'>随机生成</button>
+            <button class='remove' @click='removeSelect'>清空菜单</button>
           </div>
           <div class='list-box' v-for='menu in lists'>
               <p class='title'>{{menu.name}}</p>
