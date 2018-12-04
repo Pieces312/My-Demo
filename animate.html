@@ -38,7 +38,8 @@
       box-sizing: border-box;
       position: absolute;
       line-height: 28px;
-      transition: width ease 1s, transform ease 1s;
+      transition: width ease 1s, transform ease 1s, opacity ease 1s;
+      opacity: 0;
       background: #ddd;
       border-radius: 20px;
       box-shadow: inset -5px 0px 25px rgba(0,0,0,.4);
@@ -64,6 +65,7 @@
 </head>
 <body>
   <div id="box">
+    <h3>销量排行</h3>
     <ul id="list"></ul>
   </div>
   <script>  
@@ -80,16 +82,15 @@
         // 创建动画
         this._createAnimate();
         
-        setTimeout(() => {
-          this._addNewData()
-        }, 6000);
+        // 新增事件
+        this._addNewAnimate();
       }
       
       _initArr() {
         let data = [];
 
         for(let i = 0; i < 10; i++) {
-          let _name = `第${i+1}名`;
+          let _name = `第${i+1}位`;
           let num = parseInt(Math.random()*800);
           let _obj = {
             id: `id${i+1}`,
@@ -147,18 +148,18 @@
           count.classList.add('count');
           count.innerText = data.count;
 
+          li.style.opacity = 1;
           li.style.width = `${data.count}px`;
           li.style.background = this._createBgColor();
           li.style.transform = `translateY(${index*40}px)`;
 
-          li.appendChild(name);
-          li.appendChild(count);
-
+          li.append(name, count);
           return li;
       }
       
       // 开始动画的函数
       _beginAnimate() {
+        let bar = document.querySelector('#list');
         let newData = this._reoederBasedata(); // 重排数据
         
         newData.forEach((_l, i) => {
@@ -167,6 +168,11 @@
               n.el.style.width = `${_l.count}px`;
               n.el.style.transform = `translateY(${i*40}px)`;
               n.el.lastElementChild.innerText = _l.count;
+            }
+
+            if(n.isNew) {
+              bar.appendChild(n.el)
+              n.isNew = false;
             }
           })
         })
@@ -181,10 +187,23 @@
 
         return this._baseData.sort((l, n) => n.count - l.count);
       }
+      
+      // 添加新数据的动画
+      _addNewAnimate() {
+        let num = 0, timer = null;
+
+        timer = setInterval(() => {
+          num += 1;
+          this._addNewData()
+
+          if(num > 3) { // 新增到3个之后就清除定时器
+            clearInterval(timer);
+          }
+        }, 6000);
+      }
 
       // 添加新数据
       _addNewData() {
-        let bar = document.querySelector('#list');
         let len = this._baseData.length;
         let _name = `第${len+1}位`;
         let _count = parseInt(Math.random() * 800);
@@ -196,11 +215,11 @@
         }
         let li = this._createLiDom(_new, len+1);
 
-        bar.appendChild(li);
         this._baseData.push(_new);
         this.htmlDOMData.push({
           id: `id${len+1}`,
-          el: li
+          el: li,
+          isNew: true
         })
       }
     }
