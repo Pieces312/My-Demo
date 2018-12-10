@@ -2,20 +2,44 @@
     <div class="login-box">
         <div class="bgImg"><img src="@/assets/beauty.jpg" alt="beauty" /></div>
         <div class="form">
-            <login></login>
+            <Transition name='login'>
+                <login v-if='!status'></login>
+                <register v-else></register>
+            </Transition>
         </div>
     </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 import Login from './login.vue';
+import Register from './register.vue';
 
 export default {
     name: 'form-box',
-    components: {Login}
+    components: {Login, Register},
+    computed: mapState({
+        status: state => state.login.status
+    }),
+    mounted() {
+    }
 }
 </script>
 
 <style lang="less">
 @import '~css/login.less';
+
+.login-enter-active {
+    animation: bounce-in ease-in .5s;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

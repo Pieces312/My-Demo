@@ -1,41 +1,45 @@
 <template>
-    <div class="inner-box">
-        <div class="form-header">Login</div>
-        <!-- 登录表单 -->
+    <div class="inner-box register">
+        <div class="form-header">Sign Up</div>
         <form class="form-body">
             <div class="row-input" :class='{"mistakeClasses": telBool}'>
-                <input v-model='formData.account' @blur='hanldBlur("account")' type="text" placeholder="手机号">
+                <input v-model='formData.account' type="text" placeholder="手机号">
                 <span>{{telMsg}}</span>
             </div>
             <div class="row-input" :class='{"mistakeClasses": psdBool}'>
-                <input v-model='formData.password' @blur='hanldBlur("password")' type="password" placeholder="密码">
+                <input v-model='formData.password' type="password" placeholder="密码">
                 <span>{{psdMsg}}</span>
             </div>
+            <div class="row-input" :class='{"mistakeClasses": reBool}'>
+                <input v-model='formData.repassword' type="password" placeholder="再次确认">
+                <span>{{repsdMsg}}</span>
+            </div>
             <div class="btn-row">
-                <button class="btn">Login</button>
+                <button class="btn">Save</button>
             </div>
         </form>
-        <!-- 切换注册界面 -->
         <div class="form-footer">
-            <button class="btn" @click='change'>Don't have account?</button>
+            <button class="btn" @click='change'>I already have an account.</button>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'login-box',
+    name: 'register-box',
     data() {
         return {
-            // 表单数据
             formData: {
                 account: '',
-                password: ''
+                password: '',
+                repassword: ''
             },
             telBool: false, // 判断手机号是否输入正确
             psdBool: false, // 判断密码是否输入正确
+            reBool: false, // 判断密码是否输入正确
             telMsg: '',
-            psdMsg: ''
+            psdMsg: '',
+            repsdMsg: ''
         }
     },
     watch: {
@@ -52,24 +56,19 @@ export default {
             this.psdMsg = !isTrue ? '输入密码不正确' : '';
 
             this.psdBool = !isTrue
+        },
+        "formData.repassword" (val) {
+          this.psdBool = this.formData.password ? false : true;
+          console.log(this.formData.password === val);
+          
+          this.reBool = this.formData.password === val ? false : true;
+          this.repsdMsg = this.formData.password === val ? "" : "两次密码输入不一致";
         }
     },
     methods: {
-        // 切换到注册页面
+        // 切换到登录页面
         change() {
-            this.$store.dispatch('changeLogin', true);
-        },
-        // 输入框失焦触发的事件
-        hanldBlur(value) {
-            let val = this.formData[value];
-
-            if(value === 'account') {
-                this.telBool = !val ? true : false;
-                this.telMsg = !val ? '手机号不能为空' : '';
-            } else {
-                this.psdBool = !val ? true : false;
-                this.psdMsg = !val ? '密码不能为空' : '';
-            }
+            this.$store.dispatch('changeLogin', false);
         }
     }
 }
