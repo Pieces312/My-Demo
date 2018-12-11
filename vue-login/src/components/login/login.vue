@@ -12,7 +12,7 @@
                 <span>{{psdMsg}}</span>
             </div>
             <div class="btn-row">
-                <button class="btn">Login</button>
+                <button class="btn" @click='login'>Login</button>
             </div>
         </form>
         <!-- 切换注册界面 -->
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import Dialog from '@/components/loading';
+
 export default {
     name: 'login-box',
     data() {
@@ -34,8 +36,8 @@ export default {
             },
             telBool: false, // 判断手机号是否输入正确
             psdBool: false, // 判断密码是否输入正确
-            telMsg: '',
-            psdMsg: ''
+            telMsg: '手机号不能为空',
+            psdMsg: '密码不能为空'
         }
     },
     watch: {
@@ -70,6 +72,21 @@ export default {
                 this.psdBool = !val ? true : false;
                 this.psdMsg = !val ? '密码不能为空' : '';
             }
+        },
+        // 登录事件
+        login() {
+            let {account, password} = this.formData;
+
+            // 再次判断输入框内的值
+            if(!account || !password) {
+                alert("请输入你的登录信息")
+                this.telBool = !account ? true : false;
+                this.psdBool = !password ? true : false;
+                return;
+            }
+
+            console.log(this.formData);
+            
         }
     }
 }

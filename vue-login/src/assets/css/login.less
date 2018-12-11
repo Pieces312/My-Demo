@@ -1,7 +1,9 @@
 /* login css */ 
+@loginHeight: 500px;
+
 .login-box {
     width: 850px;
-    height: 500px;
+    height: @loginHeight;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -33,11 +35,34 @@
     height: 100%;
     box-sizing: border-box;
 
+    // 登录界面
     .inner-box {
         padding: 50px;
         width: 100%;
         height: 100%;
+        position: relative;
         box-sizing: border-box;
+
+        &[loading=true]::before {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            content: "注册中...";
+            display: inline-block;
+            color: #fff;
+            visibility: visible;
+            transition: visibility ease .5s;
+            text-align: center;
+            line-height: @loginHeight;
+            background: rgba(0, 0, 0, .5);
+        }
+
+        &[loading=false]::before {
+            visibility: hidden;
+        }
 
         .form-header {
             line-height: 40px;
@@ -183,6 +208,91 @@
 
         &:hover::after {
             width: 100%;
+        }
+    }
+}
+
+
+// 弹窗 样式
+.pull-dialog {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    background: rgba(0, 0, 0, .6);
+
+    .dialog-content {
+        min-width: 300px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border-radius: 5px;
+
+        .dialog-header {
+            padding: 0 20px;
+            line-height: 35px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dialog-body {
+            padding: 12px 20px;
+            font-size: 14px;
+            text-align: center;
+
+            i {
+                margin-bottom: 10px;
+                width: 50px;
+                height: 50px;
+                position: relative;
+                display: inline-block;
+                color: #fff;
+                background: #3fa8e6;
+                border-radius: 50%;
+
+                &::before {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-size: 30px;
+                }
+            }
+
+            i.icon-error {
+                background: #d23b36;
+
+                &::before {
+                    content: "✘";
+                }
+            }
+
+            i.icon-success {
+                background: #19be6b;
+
+                &::before {
+                    content: "✔";
+                }
+            }
+        }
+
+        .dialog-footer {
+            padding: 8px 0;
+            text-align: center;
+            border-top: 1px solid #ddd;
+
+            button {
+                padding: 5px 15px;
+                min-width: 50px;
+                cursor: pointer;
+                line-height: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
         }
     }
 }
