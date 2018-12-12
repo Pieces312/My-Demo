@@ -34,7 +34,7 @@ const actions = {
       }, delay)
     })
   },
-  
+
   // 登录
   login({commit, state}, data) {
     let now = new Date();
@@ -43,7 +43,7 @@ const actions = {
     filter.createDate = now;
 
     return new Promise((resolve, rejected) => {
-      if(filter.length && psd.length) {
+      if(filter.length) {
         resolve({data: filter, msg: '登录成功'});
         commit('upDataInfo', filter)
       } else if(psd.length == 0) {

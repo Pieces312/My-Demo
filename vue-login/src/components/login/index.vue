@@ -28,8 +28,6 @@ export default {
 </script>
 
 <style lang="less">
-@import '~css/login.less';
-
 .login-enter-active {
     animation: bounce-in ease-in .5s;
 }
