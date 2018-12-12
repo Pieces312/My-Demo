@@ -79,14 +79,32 @@ export default {
 
             // 再次判断输入框内的值
             if(!account || !password) {
-                alert("请输入你的登录信息")
+                Dialog.init({
+                    type: 'warn',
+                    message: "请输入你的登录信息"
+                })
                 this.telBool = !account ? true : false;
                 this.psdBool = !password ? true : false;
                 return;
             }
 
-            console.log(this.formData);
-            
+            this.$store.dispatch('login', this.formData).then(res => {
+                let self = this;
+                localStorage.setItem('userInfo', JSON.stringify(res.data));
+
+                Dialog.init({
+                    type: 'success',
+                    message: res.msg,
+                    callback: function() {
+                        self.$router.push('home')
+                    }
+                })
+            }).catch(error => {
+                Dialog.init({
+                    type: 'error',
+                    message: error.msg
+                })
+            })
         }
     }
 }

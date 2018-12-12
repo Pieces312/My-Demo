@@ -1,7 +1,7 @@
 <template>
     <div class="inner-box register" :loading='showLoading'>
         <div class="form-header">Sign Up</div>
-        <form class="form-body" ref='formData'>
+        <form class="form-body" id='formData'>
             <div class="row-input" :class='{"mistakeClasses": telBool}'>
                 <input v-model='formData.account' type="text" placeholder="手机号">
                 <span>{{telMsg}}</span>
@@ -43,7 +43,7 @@ export default {
             reBool: false, // 判断两次密码输入是否一致
             telMsg: '手机号不能为空', // 手机号错误提示信息
             psdMsg: '密码不能为空', // 密码错误提示信息
-            repsdMsg: '两次密码输入不一致' // 两次密码错误提示信息
+            repsdMsg: '两次密码输入不一致', // 两次密码错误提示信息
         }
     },
     watch: {
@@ -82,7 +82,10 @@ export default {
 
             // 再次判断输入框内的值
             if(!account || !password || !repassword) {
-                alert("请输入你的注册信息")
+                Dialog.init({
+                    type: 'warn',
+                    message: "请输入你的注册信息"
+                })
                 this.telBool = !account ? true : false;
                 this.psdBool = !password ? true : false;
                 this.reBool = !repassword ? true : false;
@@ -91,17 +94,25 @@ export default {
             this.showLoading = true;
             
             this.$store.dispatch("signUpUserInfo", this.formData).then(res => {
+                let self = this;
                 this.showLoading = false;
+                this.telBool = false;
+                this.psdBool = false;
 
                 Dialog.init({
                     type: 'success',
                     message: res.msg,
+                    callback: function() {
+                        self.$store.dispatch('changeLogin', false);
+                    }
                 })
+                
             }).catch(error => {
                 this.showLoading = false;
+                
                 Dialog.init({
                     type: 'error',
-                    message: error.msg,
+                    message: error.msg
                 })
             })
         }
