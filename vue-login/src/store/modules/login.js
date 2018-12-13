@@ -1,4 +1,4 @@
-import {getId} from '@/utils/tools.js';
+import {getId, getBase64} from '@/utils/tools.js';
 
 const MAX_AJAX_TIME = 2000;
 const SUCCESS_PERCENT = 70;
@@ -39,7 +39,7 @@ const actions = {
   login({commit, state}, data) {
     let now = new Date();
     let filter = state.userList.filter(item => item.account === data.account);
-    let psd = state.userList.filter(item => item.account === data.account && item.password === data.password);
+    let psd = state.userList.filter(item => item.account === data.account && getBase64(item.password) === getBase64(data.password));
     filter.createDate = now;
     filter.isLogin = true;
 

@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { setBase64 } from '@/utils/tools.js'
 import {Ajax} from '@/api/index.js';
 import Dialog from '@/components/loading';
 
@@ -87,7 +88,7 @@ export default {
                 this.reBool = !repassword ? true : false;
                 return;
             }
-
+            
             // 再次判断输入框内的值
             if(this.telBool || this.psdBool || this.reBool) {
                 Dialog.init({
@@ -97,12 +98,13 @@ export default {
                 return;
             }
             this.showLoading = true;
+
+            this.formData.password = setBase64(password)
+            this.formData.repassword = setBase64(repassword)
             
             this.$store.dispatch("signUpUserInfo", this.formData).then(res => {
                 let self = this;
                 this.showLoading = false;
-                this.telBool = false;
-                this.psdBool = false;
 
                 Dialog.init({
                     type: 'success',

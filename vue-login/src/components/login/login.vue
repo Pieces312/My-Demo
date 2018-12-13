@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { setBase64 } from '@/utils/tools.js'
 import Dialog from '@/components/loading';
 
 export default {
@@ -80,15 +81,18 @@ export default {
                 return;
             }
 
+            this.formData.password = setBase64(password)
+
             this.$store.dispatch('login', this.formData).then(res => {
                 let self = this;
                 localStorage.setItem('userInfo', JSON.stringify(res.data));
+                this.psdBool = false;
 
                 Dialog.init({
                     type: 'success',
                     message: res.msg,
                     callback: function() {
-                        self.$router.push('home')
+                        self.$router.replace('home')
                     }
                 })
             }).catch(error => {
