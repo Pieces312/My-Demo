@@ -1,6 +1,50 @@
 /* login css */ 
 @loginHeight: 500px;
 
+// 公共标识
+i {
+    margin-bottom: 10px;
+    width: 50px;
+    height: 50px;
+    position: relative;
+    display: inline-block;
+    color: #fff;
+    font-size: 30px;
+    background: #3fa8e6;
+    border-radius: 50%;
+
+    &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+i.icon-error {
+    background: #d23b36;
+
+    &::before {
+        content: "✘";
+    }
+}
+
+i.icon-success {
+    background: #19be6b;
+
+    &::before {
+        content: "✔";
+    }
+}
+
+i.icon-warn {
+    background: #c7991d;
+
+    &::before {
+        content: "!";
+    }
+}
+
 .login-box {
     width: 850px;
     height: @loginHeight;
@@ -244,48 +288,6 @@
             font-size: 14px;
             text-align: center;
 
-            i {
-                margin-bottom: 10px;
-                width: 50px;
-                height: 50px;
-                position: relative;
-                display: inline-block;
-                color: #fff;
-                background: #3fa8e6;
-                border-radius: 50%;
-
-                &::before {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-size: 30px;
-                }
-            }
-
-            i.icon-error {
-                background: #d23b36;
-
-                &::before {
-                    content: "✘";
-                }
-            }
-
-            i.icon-success {
-                background: #19be6b;
-
-                &::before {
-                    content: "✔";
-                }
-            }
-
-            i.icon-warn {
-                background: #c7991d;
-
-                &::before {
-                    content: "!";
-                }
-            }
         }
 
         .dialog-footer {
@@ -308,24 +310,29 @@
 // home 页面
 .main {
     .tips {
-        margin: 100px auto 0;
-        width: 400px;
-        position: relative;
+        margin-top: 100px;
+        text-align: center;
 
-        img {
-            width: 100%;
+        i {
+            width: 80px;
+            height: 80px;
+            font-size: 45px;
         }
     
         p {
-            width: 200px;
-            height: 100px;
-            position: absolute;
-            top: -5%;
-            right: -5%;
-            z-index: 5;
-            background: #fff;
-            border: 3px solid #666;
-            clip-path: polygon(0% 10%, 100% 0%, 100% 85%, 65% 80%, 75% 100%, 40% 80%, 0% 75%);
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            cursor: pointer;
+            border: 1px solid #999;
+            border-radius: 5px;
+
+            &:active {
+                // border-color: #3fa8e6;
+                box-shadow: 0 0 5px #919191;
+            }
         }
     }
 }

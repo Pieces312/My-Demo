@@ -41,13 +41,16 @@ const actions = {
     let filter = state.userList.filter(item => item.account === data.account);
     let psd = state.userList.filter(item => item.account === data.account && item.password === data.password);
     filter.createDate = now;
+    filter.isLogin = true;
 
     return new Promise((resolve, rejected) => {
       if(filter.length) {
-        resolve({data: filter, msg: '登录成功'});
-        commit('upDataInfo', filter)
-      } else if(psd.length == 0) {
-        rejected({data: null, msg: '密码错误'});
+        if(psd.length) {
+          resolve({data: filter, msg: '登录成功'});
+          commit('upDataInfo', filter)
+        } else {
+          rejected({data: null, msg: '密码错误'});
+        }
       } else {
         rejected({data: null, msg: '未注册，请先注册'})
       }

@@ -1,15 +1,22 @@
 <template>
   <div class="main">
     <div class="tips">
-      <img src="@/assets/beauty.jpg" alt="迪丽热巴">
+      <i class="icon-success"></i>
       <p>恭喜，登录成功</p>
+      <button class="btn" @click='signOut'>退出登录</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'home'
+  name: 'home',
+  methods: {
+    signOut() {
+      localStorage.removeItem('userInfo');
+      this.$router.push('/');
+    }
+  }
 }
 </script>
 
