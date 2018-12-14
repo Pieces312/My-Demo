@@ -1,6 +1,6 @@
 <template>
     <div class="inner-box">
-        <div class="form-header">Login</div>
+        <div class="form-header">登录</div>
         <!-- 登录表单 -->
         <form class="form-body">
             <div class="row-input" :class='{"mistakeClasses": telBool}'>
@@ -12,12 +12,12 @@
                 <span>{{psdMsg}}</span>
             </div>
             <div class="btn-row">
-                <button class="btn" @click='login'>Login</button>
+                <button class="btn" @click='login'>登录</button>
             </div>
         </form>
         <!-- 切换注册界面 -->
         <div class="form-footer">
-            <button class="btn" @click='change'>Don't have account?</button>
+            <button class="btn" @click='change'>没账号？ 去注册</button>
         </div>
     </div>
 </template>
