@@ -1,6 +1,6 @@
 <template>
     <div class="login-box">
-        <div class="bgImg"><img :src="required('@/assets/beauty.jpg')" alt="beauty" /></div>
+        <div class="bgImg"><img :src="required('../../assets/beauty.jpg')" alt="beauty" /></div>
         <div class="form">
             <Transition name='login'>
                 <login v-if='!status'></login>
