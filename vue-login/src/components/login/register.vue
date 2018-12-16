@@ -1,6 +1,6 @@
 <template>
     <div class="inner-box register" :loading='showLoading'>
-        <div class="form-header">Sign Up</div>
+        <div class="form-header">注册</div>
         <form class="form-body" id='formData'>
             <div class="row-input" :class='{"mistakeClasses": telBool}'>
                 <input v-model='formData.account' type="text" placeholder="手机号">
@@ -15,11 +15,11 @@
                 <span>{{repsdMsg}}</span>
             </div>
             <div class="btn-row">
-                <button class="btn" @click='signUpAccount'>Save</button>
+                <button class="btn" @click='signUpAccount'>保存</button>
             </div>
         </form>
         <div class="form-footer">
-            <button class="btn" @click='change'>I already have an account.</button>
+            <button class="btn" @click='change'>已有账号，去登陆</button>
         </div>
     </div>
 </template>
