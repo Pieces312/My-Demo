@@ -15,7 +15,7 @@
                 <span>{{repsdMsg}}</span>
             </div>
             <div class="btn-row">
-                <button class="btn" @click='signUpAccount'>保存</button>
+                <button type="button" class="btn" @click.stop='signUpAccount'>保存</button>
             </div>
         </form>
         <div class="form-footer">

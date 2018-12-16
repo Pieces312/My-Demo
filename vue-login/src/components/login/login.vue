@@ -12,7 +12,7 @@
                 <span>{{psdMsg}}</span>
             </div>
             <div class="btn-row">
-                <button class="btn" @click='login'>登录</button>
+                <button type="button" class="btn" @click.stop='login'>登录</button>
             </div>
         </form>
         <!-- 切换注册界面 -->
