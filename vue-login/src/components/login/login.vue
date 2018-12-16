@@ -4,11 +4,11 @@
         <!-- 登录表单 -->
         <form class="form-body">
             <div class="row-input" :class='{"mistakeClasses": telBool}'>
-                <input v-model='formData.account' @blur='hanldBlur("account")' type="text" placeholder="手机号">
+                <input v-model='formData.account' type="text" placeholder="手机号">
                 <span>{{telMsg}}</span>
             </div>
             <div class="row-input" :class='{"mistakeClasses": psdBool}'>
-                <input v-model='formData.password' @blur='hanldBlur("password")' type="password" placeholder="密码">
+                <input v-model='formData.password' type="password" placeholder="密码">
                 <span>{{psdMsg}}</span>
             </div>
             <div class="btn-row">
@@ -17,12 +17,13 @@
         </form>
         <!-- 切换注册界面 -->
         <div class="form-footer">
-            <button class="btn" @click='change'>没有账号？ 去注册</button>
+            <button class="btn" @click='change'>没账号？ 去注册</button>
         </div>
     </div>
 </template>
 
 <script>
+import { setBase64 } from '@/utils/tools.js'
 import Dialog from '@/components/loading';
 
 export default {
@@ -44,14 +45,14 @@ export default {
         "formData.account" (val) {
             let reg = /^[1][3,5,7,8,9][0-9]{9}$/;
             let isTrue = reg.test(val);
-            this.telMsg = !isTrue ? '输入手机号不正确' : '';
+            this.telMsg = !isTrue ? '手机号格式错误' : '';
             
             this.telBool = !isTrue
         },
         "formData.password" (val) {
             let reg = /^[A-Za-z0-9]{8,21}$/;
             let isTrue = reg.test(val);
-            this.psdMsg = !isTrue ? '输入密码不正确' : '';
+            this.psdMsg = !isTrue ? '密码格式错误' : '';
 
             this.psdBool = !isTrue
         }
@@ -61,42 +62,37 @@ export default {
         change() {
             this.$store.dispatch('changeLogin', true);
         },
-        // 输入框失焦触发的事件
-        hanldBlur(value) {
-            let val = this.formData[value];
-
-            if(value === 'account') {
-                this.telBool = !val ? true : false;
-                this.telMsg = !val ? '手机号不能为空' : '';
-            } else {
-                this.psdBool = !val ? true : false;
-                this.psdMsg = !val ? '密码不能为空' : '';
-            }
-        },
         // 登录事件
         login() {
             let {account, password} = this.formData;
 
-            // 再次判断输入框内的值
             if(!account || !password) {
-                Dialog.init({
-                    type: 'warn',
-                    message: "请输入你的登录信息"
-                })
                 this.telBool = !account ? true : false;
                 this.psdBool = !password ? true : false;
                 return;
             }
 
+            // 再次判断输入框内的值
+            if(this.telBool || this.psdBool) {
+                Dialog.init({
+                    type: 'warn',
+                    message: "您的登录信息有误"
+                })
+                return;
+            }
+
+            this.formData.password = setBase64(password)
+
             this.$store.dispatch('login', this.formData).then(res => {
                 let self = this;
                 localStorage.setItem('userInfo', JSON.stringify(res.data));
+                this.psdBool = false;
 
                 Dialog.init({
                     type: 'success',
                     message: res.msg,
                     callback: function() {
-                        self.$router.push('home')
+                        self.$router.replace('home')
                     }
                 })
             }).catch(error => {

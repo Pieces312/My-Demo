@@ -19,12 +19,13 @@
             </div>
         </form>
         <div class="form-footer">
-            <button class="btn" @click='change'>已有账号，去登陆</button>
+            <button class="btn" @click='change'>已有账号</button>
         </div>
     </div>
 </template>
 
 <script>
+import { setBase64 } from '@/utils/tools.js'
 import {Ajax} from '@/api/index.js';
 import Dialog from '@/components/loading';
 
@@ -51,7 +52,7 @@ export default {
         "formData.account" (val) {
             let reg = /^[1][3,5,7,8,9][0-9]{9}$/;
             let isTrue = reg.test(val);
-            this.telMsg = !isTrue ? '输入手机号不正确' : '';
+            this.telMsg = !isTrue ? '手机号格式错误' : '';
             
             this.telBool = !isTrue
         },
@@ -59,7 +60,7 @@ export default {
         "formData.password" (val) {
             let reg = /^[A-Za-z0-9]{8,21}$/;
             let isTrue = reg.test(val);
-            this.psdMsg = !isTrue ? '输入密码不正确' : '';
+            this.psdMsg = !isTrue ? '密码格式错误' : '';
 
             this.psdBool = !isTrue
         },
@@ -82,22 +83,28 @@ export default {
 
             // 再次判断输入框内的值
             if(!account || !password || !repassword) {
-                Dialog.init({
-                    type: 'warn',
-                    message: "请输入你的注册信息"
-                })
                 this.telBool = !account ? true : false;
                 this.psdBool = !password ? true : false;
                 this.reBool = !repassword ? true : false;
                 return;
             }
+            
+            // 再次判断输入框内的值
+            if(this.telBool || this.psdBool || this.reBool) {
+                Dialog.init({
+                    type: 'warn',
+                    message: "注册信息有误"
+                })
+                return;
+            }
             this.showLoading = true;
+
+            this.formData.password = setBase64(password)
+            this.formData.repassword = setBase64(repassword)
             
             this.$store.dispatch("signUpUserInfo", this.formData).then(res => {
                 let self = this;
                 this.showLoading = false;
-                this.telBool = false;
-                this.psdBool = false;
 
                 Dialog.init({
                     type: 'success',
