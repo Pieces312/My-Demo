@@ -12,7 +12,6 @@
 
 <script>
 import {mapState} from 'vuex'
-
 import Login from './login.vue';
 import Register from './register.vue';
 
