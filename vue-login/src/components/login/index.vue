@@ -1,6 +1,6 @@
 <template>
     <div class="login-box">
-        <div class="bgImg"><img :src="required('../../assets/beauty.jpg')" alt="beauty" /></div>
+        <div class="bgImg"><img :src="beauty" alt="beauty" /></div>
         <div class="form">
             <Transition name='login'>
                 <login v-if='!status'></login>
@@ -14,6 +14,7 @@
 import {mapState} from 'vuex'
 import Login from './login.vue';
 import Register from './register.vue';
+import beauty from '../../assets/beauty.jpg';
 
 export default {
     name: 'form-box',
