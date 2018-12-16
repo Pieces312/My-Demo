@@ -22,7 +22,10 @@ export default {
     computed: mapState({
         status: state => state.login.status
     }),
-    mounted() {
+    data() {
+      return {
+          beauty
+      }  
     }
 }
 </script>
