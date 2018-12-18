@@ -5,12 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>JavaScript 简单效果</title>
+  <style>
+    /* init css */
+     a {
+      text-decoration: none;
+      color: #000;
+    }
+
+    /* demo-list css */
+    .demo-list {
+      margin: 50px auto;
+      min-width: 500px;
+    }
+
+    .demo-list li a {
+      font-size: 15px;
+      transition: color ease .5s;
+    }
+
+    /* hover 效果 */
+    .demo-list li a:hover {
+      text-decoration: underline;
+      color: #099292;
+    }
+  </style>
 </head>
 <body>
-  <ul>
+  <ol class="demo-list">
     <li><a href="./dist/index.html">登陆效果</a></li>
     <li><a href="./animate/animate.html">排名改变动画效果</a></li>
     <li><a href="./menus/menus.html">点菜功能</a></li>
-  </ul>
+  </ol>
 </body>
 </html>
