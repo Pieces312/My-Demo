@@ -1,5 +1,3 @@
-# JavaScript
-JS 动画 DEMO:
-
-简易的点菜功能
+# My-demo
+自己平时写的一些功能
 
