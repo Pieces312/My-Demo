@@ -1,5 +1,4 @@
-# JavaScript
-JS 动画 DEMO:
-
-简易的点菜功能
+# My-demo
+自己平时写的一些功能
+效果演示：https://pieces312.github.io/My-Demo/index.html
 
