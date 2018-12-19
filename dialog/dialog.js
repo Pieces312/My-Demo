@@ -88,7 +88,7 @@ class Dialog {
 
     let i = document.createElement('i');
     i.classList.add('icon-close');
-    headDOM.classList.add(type);
+    
     headDOM.innerText = dialogType[type];
 
     // 点击关闭
