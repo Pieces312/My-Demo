@@ -9,7 +9,7 @@ class Dialog {
     this.dialogType = {
       "default": '默认',
       "success": '成功',
-      "warn": '警告',
+      "warning": '警告',
       "error": '错误'
     }
     

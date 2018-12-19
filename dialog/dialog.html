@@ -92,6 +92,7 @@
       height: 35px;
       position: absolute;
       top: 0;
+      content: '';
       text-align: center;
       font-size: 20px;
       line-height: 35px;
@@ -109,7 +110,7 @@
       background: #22be5e;
     }
 
-    .dialog-content .dialo-body .icon.warn::before {
+    .dialog-content .dialog-body .icon.warning::before {
       content: '!';
       background: #d3a91e;
     }
@@ -141,14 +142,14 @@
   <div class="box">
     <button id='default'>默认弹窗</button>
     <button id='btn'>成功弹窗</button>
-    <button id='warn'>警告弹窗</button>
+    <button id='warning'>警告弹窗</button>
     <button id='error'>错误弹窗</button>
   </div>
   <script src="dialog.js"></script>
   <script>
     let _default = document.querySelector('#default');
     let _btn = document.querySelector('#btn');
-    let _warn = document.querySelector('#warn');
+    let _warning = document.querySelector('#warning');
     let _error = document.querySelector('#error');
     let _d = new Dialog();
 
@@ -169,9 +170,9 @@
       });
     }
 
-    _warn.onclick = function() {
+    _warning.onclick = function() {
       _d.init({
-        type: 'warn',
+        type: 'warning',
         message: '警告信息',
         buttons: [
           {value:'关闭', type:'close'}
