@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>弹窗基础</title>
+  <style>
+    /* init css */
+    button {
+      vertical-align: top;
+      outline: none;
+      border: none;
+      background: inherit;
+    }
+
+    i {
+      font-style: normal;
+    }
+
+    /* box button css */
+    .box button {
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    /* 遮罩层样式 */
+    .mask {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: rgba(0,0,0,.5);
+    }
+
+    /* 弹窗层 */
+    .dialog-content {
+      min-width: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    /* 弹窗层头部 */
+    .dialog-content .dialog-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .dialog-content .dialog-header .icon-close::before {
+      float: right;
+      cursor: pointer;
+      content: '×';
+      font-size: 20px;
+      color: #999;
+    }
+
+    /* 弹窗层主体 */
+    .dialog-content .dialog-body {
+      padding: 15px 20px;
+      width: 100%;
+      box-sizing: border-box;
+      display: table;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .dialog-content .dialog-body .icon,
+    .dialog-content .dialog-body span {
+      display: table-cell;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .dialog-content .dialog-body .icon {
+      margin-right: 20px;
+      width: 50px;
+      height: 35px;
+      position: relative;
+      font-style: normal;
+    }
+
+    .dialog-content .dialog-body .icon::before {
+      width: 35px;
+      height: 35px;
+      position: absolute;
+      top: 0;
+      text-align: center;
+      font-size: 20px;
+      line-height: 35px;
+      color: #fff;
+      border-radius: 50%;
+    }
+
+    .dialog-content .dialog-body .icon.default::before {
+      content: '¡';
+      background: #2f9ae2;
+    }
+
+    .dialog-content .dialog-body .icon.success::before {
+      content: '✔';
+      background: #22be5e;
+    }
+
+    .dialog-content .dialo-body .icon.warn::before {
+      content: '!';
+      background: #d3a91e;
+    }
+
+    .dialog-content .dialog-body .icon.error::before {
+      content: '✘';
+      background: #f04d37;
+    }
+
+    /* 弹窗层底部 */
+    .dialog-footer {
+      padding: 12px 20px;
+      text-align: right;
+      border-top: 1px solid #ddd;
+    }
+    .dialog-footer .btn {
+      margin-left: 10px;
+      padding: 8px 20px;
+      min-width: 60px;
+      box-sizing: border-box;
+      font-size: 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <button id='default'>默认弹窗</button>
+    <button id='btn'>成功弹窗</button>
+    <button id='warn'>警告弹窗</button>
+    <button id='error'>错误弹窗</button>
+  </div>
+  <script src="dialog.js"></script>
+  <script>
+    let _default = document.querySelector('#default');
+    let _btn = document.querySelector('#btn');
+    let _warn = document.querySelector('#warn');
+    let _error = document.querySelector('#error');
+    let _d = new Dialog();
+
+    _default.onclick = function() {
+      _d.init();
+    }
+
+    _btn.onclick = function() {
+      _d.init({
+        type: 'success',
+        message: '回调成功',
+        buttons: [
+          {value:'关闭', type:'close'},
+          {value:'确认', type:'sure', callback: () => {
+            alert("你点击了确认按钮");
+          }}
+        ]
+      });
+    }
+
+    _warn.onclick = function() {
+      _d.init({
+        type: 'warn',
+        message: '警告信息',
+        buttons: [
+          {value:'关闭', type:'close'}
+        ]
+      });
+    }
+
+    _error.onclick = function() {
+      _d.init({
+        type: 'error',
+        message: '错误信息',
+        buttons: [
+          {value:'关闭', type:'close'}
+        ]
+      });
+    }
+  </script>
+</body>
+</html>
