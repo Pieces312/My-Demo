@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas绘制气泡</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    #canvas {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    let cns = document.getElementById("canvas");
+    let ctx = cns.getContext("2d"); // canvas绘制环境
+
+    cns.style.width = '100%';
+    cns.style.height = '100%';
+
+    ctx.rect(5.5,5.5,100,100)
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+  </script>
+</body>
+</html>
